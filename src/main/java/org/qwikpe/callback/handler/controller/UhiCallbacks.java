@@ -30,7 +30,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_init")
-    public void onInit(@RequestBody JsonNode payload) {
+    public void onInit(@RequestBody String payload) {
         try {
             LOGGER.info("onInit :: payload: {}", payload);
         } catch (Exception e) {
@@ -39,7 +39,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_confirm")
-    public void onConfirm(@RequestBody JsonNode payload) {
+    public void onConfirm(@RequestBody String payload) {
         try {
             LOGGER.info("onConfirm :: payload: {}", payload);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_status")
-    public void onStatus(@RequestBody JsonNode payload) {
+    public void onStatus(@RequestBody String payload) {
         try {
             LOGGER.info("onStatus :: payload: {}", payload);
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_update")
-    public void onUpdate(@RequestBody JsonNode payload) {
+    public void onUpdate(@RequestBody String payload) {
         try {
             LOGGER.info("onUpdate :: payload: {}", payload);
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_message")
-    public void onMessage(@RequestBody JsonNode payload) {
+    public void onMessage(@RequestBody String payload) {
         try {
             LOGGER.info("onMessage :: payload: {}", payload);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_cancel")
-    public void onCancel(@RequestBody JsonNode payload) {
+    public void onCancel(@RequestBody String payload) {
         try {
             LOGGER.info("onCancel :: payload: {}", payload);
         } catch (Exception e) {
