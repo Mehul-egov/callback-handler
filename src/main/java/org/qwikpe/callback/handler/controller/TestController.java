@@ -11,7 +11,7 @@ public class TestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
-    @GetMapping("/v0.5/testing")
+    @GetMapping("/")
     public ResponseEntity<Object> test() {
         LOGGER.info("Welcome to test api of callback handler !!");
         return ResponseEntity.ok("Welcome to test api of callback handler !!");

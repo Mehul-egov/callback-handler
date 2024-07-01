@@ -12,7 +12,7 @@ public class UhiCallbacks {
     private static final Logger LOGGER = LoggerFactory.getLogger(UhiCallbacks.class);
 
     @PostMapping(value = "/on_search")
-    public void onSearch(@RequestBody JsonNode payload) {
+    public void onSearch(@RequestBody String payload) {
         try {
             LOGGER.info("onSearch :: payload: {}", payload);
         } catch (Exception e) {
