@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.*;
+import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
@@ -60,7 +58,7 @@ public class WebClientUtiImpl implements WebClientUtil{
                             httpHeaders -> {
                                 httpHeaders.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
                                 httpHeaders.setAccept(List.of(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE)));
-                                httpHeaders.setBearerAuth(accessToken);
+//                                httpHeaders.setBearerAuth(accessToken);
                                 for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
                                     httpHeaders.add(stringStringEntry.getKey(), stringStringEntry.getValue());
                                 }
@@ -71,7 +69,6 @@ public class WebClientUtiImpl implements WebClientUtil{
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(type)
-                    .doOnSuccess(t -> LOGGER.info("successfully consumed on search api {}:", t))
                     .block();
         } catch (WebClientRequestException webClientRequestException) {
             LOGGER.error(
@@ -108,6 +105,5 @@ public class WebClientUtiImpl implements WebClientUtil{
             }
             return postMethod(baserUrl, uri, headers, body, type, maxRetryCount);
         }
-
     }
 }
