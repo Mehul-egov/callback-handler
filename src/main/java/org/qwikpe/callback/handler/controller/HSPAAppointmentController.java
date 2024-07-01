@@ -21,7 +21,7 @@ public class HSPAAppointmentController {
     public void search(@RequestBody String payload) {
 
         try {
-            LOGGER.info("Search payload: {}", payload);
+            LOGGER.info("Search payload EUA request :: {}", payload);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(payload);
 

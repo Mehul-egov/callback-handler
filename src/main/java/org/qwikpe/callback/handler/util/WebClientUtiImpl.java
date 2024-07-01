@@ -71,6 +71,7 @@ public class WebClientUtiImpl implements WebClientUtil{
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(type)
+                    .doOnSuccess(t -> LOGGER.info("successfully consumed on search api {}:", t))
                     .block();
         } catch (WebClientRequestException webClientRequestException) {
             LOGGER.error(
