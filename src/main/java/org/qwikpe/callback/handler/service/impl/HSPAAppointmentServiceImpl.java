@@ -78,6 +78,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
             Map<String, String> headers = new HashMap<>();
 
             String authorizedHeader = headerGenerator.getHeader(subsId,publicKeyId,privateKey,jsonNode.asText());
+            LOGGER.info("Authorization Header :: {}",authorizedHeader);
             headers.put("Authorization", authorizedHeader);
 
             JsonNode onSearchResponse = webClientUtil.postMethod(Constants.UHI_BASE_URL, Constants.UHI_ON_SEARCH, headers, responseJsonNode, JsonNode.class, 3);
