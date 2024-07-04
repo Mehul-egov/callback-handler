@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.jcajce.spec.EdDSAParameterSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;

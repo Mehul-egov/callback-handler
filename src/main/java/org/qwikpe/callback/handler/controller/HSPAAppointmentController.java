@@ -2,7 +2,7 @@ package org.qwikpe.callback.handler.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.qwikpe.callback.handler.service.HSPAAppointmentService;
+import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,10 @@
 package org.qwikpe.callback.handler.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.qwikpe.callback.handler.service.uhi.UHICommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UhiCallbacks {
     private static final Logger LOGGER = LoggerFactory.getLogger(UhiCallbacks.class);
 
+    @Autowired
+    private UHICommonService uhiCommonService;
+
     @PostMapping(value = "/on_search")
     public void onSearch(@RequestBody String payload) {
         try {
             LOGGER.info("onSearch :: payload: {}", payload);
+            uhiCommonService.searchResponse(payload);
         } catch (Exception e) {
             LOGGER.error("onSearch :: Error", e);
         }

@@ -1,6 +1,10 @@
 spring:
   application:
     name: callback-handler
+  datasource:
+    url: jdbc:postgresql://localhost:5432/qwikpe-master-data
+    username: postgres
+    password: root
 
 logging:
   file:
@@ -8,4 +12,3 @@ logging:
 
 server:
   port: 9092
-

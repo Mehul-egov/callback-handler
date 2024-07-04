@@ -1,9 +1,8 @@
-package org.qwikpe.callback.handler.service.impl;
+package org.qwikpe.callback.handler.service.uhi.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.qwikpe.callback.handler.service.HSPAAppointmentService;
+import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.HeaderGenerator;
 import org.qwikpe.callback.handler.util.WebClientUtil;
@@ -53,7 +52,6 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
             Map<String, String> headers = new HashMap<>();
 
             String authorizedHeader = headerGenerator.getHeader(subsId,publicKeyId,privateKey,searchResponse);
-            LOGGER.info("Authorization Header :: "+authorizedHeader);
             headers.put("Authorization", authorizedHeader);
 
             JsonNode onSearchResponse = webClientUtil.postMethod(Constants.UHI_BASE_URL, Constants.UHI_ON_SEARCH, headers, responseJsonNode, JsonNode.class, 3);

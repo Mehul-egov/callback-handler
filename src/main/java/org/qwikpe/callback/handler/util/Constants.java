@@ -18,5 +18,9 @@ public class Constants {
     public static final String UHI_BASE_URL = "https://uhigatewaysandbox.abdm.gov.in/api/v1";
 
     public static final String UHI_ON_SEARCH = "/on_search";
+
+    public static final String MASTER_URL = "http://localhost:9093";
+
+    public static final String SET_BLOOD_DATA = "/blood-data/set";
 }
 
