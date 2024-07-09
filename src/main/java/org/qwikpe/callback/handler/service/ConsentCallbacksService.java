@@ -2,9 +2,12 @@ package org.qwikpe.callback.handler.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.Map;
-import java.util.Objects;
-
 public interface ConsentCallbacksService {
-    void consentRequestOnInit(JsonNode payload);
+    void consentRequestOnFetchModes(JsonNode payload);
+
+    void consentRequestOnAuthInit(JsonNode payload);
+
+    void consentRequestOnConfirm(JsonNode payload);
+
+    void generateToken(JsonNode payload);
 }

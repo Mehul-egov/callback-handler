@@ -6,13 +6,6 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class Constants {
-    public static ObjectMapper JACK_OBJ_MAPPER;
-
-    @PostConstruct
-    public void init() {
-        JACK_OBJ_MAPPER = new ObjectMapper();
-    }
-
     public static final int MAX_RETRY = 2;
 
     public static final String UHI_BASE_URL = "https://uhigatewaysandbox.abdm.gov.in/api/v1";

@@ -12,7 +12,22 @@ public class ConsentCallbacksServiceImpl implements ConsentCallbacksService {
     public static final Logger LOGGER = LoggerFactory.getLogger(ConsentCallbacksServiceImpl.class);
 
     @Override
-    public void consentRequestOnInit(JsonNode payload) {
-        LOGGER.info("response: {}", payload);
+    public void consentRequestOnFetchModes(JsonNode payload) {
+        LOGGER.info("consentRequestOnFetchModes :: response: {}", payload);
+    }
+
+    @Override
+    public void consentRequestOnAuthInit(JsonNode payload) {
+        LOGGER.info("consentRequestOnAuthInit :: response: {}", payload);
+    }
+
+    @Override
+    public void consentRequestOnConfirm(JsonNode payload) {
+        LOGGER.info("consentRequestOnConfirm :: response: {}", payload);
+    }
+
+    @Override
+    public void generateToken(JsonNode payload) {
+        LOGGER.info("generateToken :: response: {}", payload);
     }
 }

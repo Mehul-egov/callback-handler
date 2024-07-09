@@ -2,7 +2,7 @@ spring:
   application:
     name: callback-handler
   datasource:
-    url: jdbc:postgresql://localhost:5432/qwikpe-master-data
+    url: jdbc:postgresql://localhost:5432/qwikpe-b2b
     username: postgres
     password: root
 
