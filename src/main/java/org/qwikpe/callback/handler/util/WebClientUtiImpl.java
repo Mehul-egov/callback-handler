@@ -1,27 +1,40 @@
 package org.qwikpe.callback.handler.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.qwikpe.callback.handler.exception.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Controller
+@EnableScheduling
 public class WebClientUtiImpl implements WebClientUtil{
     private static final Logger LOGGER = LoggerFactory.getLogger(WebClientUtiImpl.class);
+
+    @Value("${secret.abdm.clientId}")
+    private String clientId;
+
+    @Value("${secret.abdm.clientSecret}")
+    private String clientSecret;
 
     private final ExchangeStrategies exchangeStrategies =
             ExchangeStrategies.builder()
@@ -32,6 +45,40 @@ public class WebClientUtiImpl implements WebClientUtil{
 
     @Getter
     public String accessToken = null;
+
+    @PostConstruct
+    public void init() {
+        setAbdmAccessToken();
+    }
+
+    @Scheduled(cron = "0 */15 * * * *")
+    private void refreshToken() {
+        setAbdmAccessToken();
+    }
+
+    public void setAbdmAccessToken() {
+        Map<String, String> secretMap =
+                new HashMap<>() {
+                    {
+                        put("clientId", clientId);
+                        put("clientSecret", clientSecret);
+                        put("grantType", "client_credentials");
+                    }
+                };
+
+        JsonNode jsonNode =
+                getWebClient().mutate()
+                        .baseUrl("https://dev.abdm.gov.in/")
+                        .build()
+                        .post()
+                        .uri("gateway/v0.5/sessions")
+                        .bodyValue(secretMap)
+                        .retrieve()
+                        .bodyToMono(JsonNode.class)
+                        .block();
+
+        accessToken = jsonNode.get("accessToken").asText();
+    }
 
     private WebClient getWebClient() {
         HttpClient httpClient =
@@ -58,7 +105,7 @@ public class WebClientUtiImpl implements WebClientUtil{
                             httpHeaders -> {
                                 httpHeaders.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
                                 httpHeaders.setAccept(List.of(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE)));
-//                                httpHeaders.setBearerAuth(accessToken);
+                                httpHeaders.setBearerAuth(accessToken);
                                 for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
                                     httpHeaders.add(stringStringEntry.getKey(), stringStringEntry.getValue());
                                 }

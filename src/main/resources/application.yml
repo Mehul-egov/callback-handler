@@ -12,3 +12,8 @@ logging:
 
 server:
   port: 9092
+
+secret:
+  abdm:
+    clientId: SBXID_007285
+    clientSecret: 25a4bf63-da0c-486c-aa53-ce9bd4fbe54a

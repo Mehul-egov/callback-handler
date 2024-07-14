@@ -15,5 +15,11 @@ public class Constants {
     public static final String MASTER_URL = "http://localhost:9093";
 
     public static final String SET_BLOOD_DATA = "/blood-data/set";
+
+    public static final String REQUEST_ID = "REQUEST-ID";
+
+    public static final String TIMESTAMP = "TIMESTAMP";
+
+    public static final String X_CM_ID = "X-CM-ID";
 }
 

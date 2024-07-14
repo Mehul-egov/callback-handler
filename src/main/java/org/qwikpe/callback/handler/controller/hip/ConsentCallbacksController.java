@@ -1,7 +1,7 @@
-package org.qwikpe.callback.handler.controller;
+package org.qwikpe.callback.handler.controller.hip;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.qwikpe.callback.handler.service.ConsentCallbacksService;
+import org.qwikpe.callback.handler.service.hip.ConsentCallbacksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ public class ConsentCallbacksController {
         }
     }
 
-    @PostMapping(value = "/v0.5/users/auth/on-auth-init")
-    public void consentRequestAuthInit(@RequestBody JsonNode payload) {
+    @PostMapping(value = "/v0.5/users/auth/on-init")
+    public void consentRequestInitAuthMode(@RequestBody JsonNode payload) {
         try {
-            consentCallbacksService.consentRequestOnAuthInit(payload);
+            consentCallbacksService.consentRequestInitAuthMode(payload);
         } catch (Exception e) {
-            LOGGER.error("consentRequestAuthInit :: Error while processing the callback response, payload: {}", payload, e);
+            LOGGER.error("consentRequestInitAuthMode :: Error while processing the callback response, payload: {}", payload, e);
         }
     }
 
@@ -46,14 +46,16 @@ public class ConsentCallbacksController {
     }
 
     @PostMapping(value = "/api/v3/hip/token/on-generate-token")
-    public void generateToken(@RequestBody JsonNode payload) {
+    public void onGenerateToken(@RequestBody JsonNode payload,
+                                @RequestHeader("X-HIP-ID") String xHipID) {
         try {
-            consentCallbacksService.generateToken(payload);
+            consentCallbacksService.onGenerateToken(payload, xHipID);
         } catch (Exception e) {
-            LOGGER.error("generateToken :: Error while processing the callback response, payload: {}", payload, e);
+            LOGGER.error("onGenerateToken :: Error while processing the callback response of on-generate-token, payload: {}", payload, e);
         }
     }
 
+    //Todo: Need toe relocate in phr
     @PostMapping(value = "/v0.5/subscription-requests/hiu/on-init")
     public void hiuOnInit(@RequestBody JsonNode payload) {
         try {
