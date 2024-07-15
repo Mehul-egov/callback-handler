@@ -1,6 +1,10 @@
 spring:
   application:
     name: callback-handler
+  datasource:
+    url: jdbc:postgresql://localhost:5432/qwikpe-b2b
+    username: postgres
+    password: root
 
 logging:
   file:
@@ -9,3 +13,7 @@ logging:
 server:
   port: 9092
 
+secret:
+  abdm:
+    clientId: SBXID_007285
+    clientSecret: 25a4bf63-da0c-486c-aa53-ce9bd4fbe54a

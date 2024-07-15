@@ -1,0 +1,4 @@
+#datasource:
+#  url: jdbc:postgresql:/ec2-15-206-44-6.ap-south-1.compute.amazonaws.com:5432/qwikpe-b2b
+#  username: postgres
+#  password: root
