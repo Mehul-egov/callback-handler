@@ -1,4 +1,4 @@
-package org.qwikpe.callback.handler.controller;
+package org.qwikpe.callback.handler.controller.uhi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

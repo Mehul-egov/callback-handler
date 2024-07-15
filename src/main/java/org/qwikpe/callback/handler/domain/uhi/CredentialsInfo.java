@@ -1,4 +1,4 @@
-package org.qwikpe.callback.handler.entities.uhi;
+package org.qwikpe.callback.handler.domain.uhi;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

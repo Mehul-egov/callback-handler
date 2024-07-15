@@ -2,10 +2,9 @@ package org.qwikpe.callback.handler.service.uhi.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.qwikpe.callback.handler.entities.uhi.CredentialsInfo;
-import org.qwikpe.callback.handler.repositories.uhi.CredentialsInfoRepository;
+import org.qwikpe.callback.handler.domain.uhi.CredentialsInfo;
+import org.qwikpe.callback.handler.repository.uhi.CredentialsInfoRepository;
 import org.qwikpe.callback.handler.service.uhi.BloodService;
-import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
 import org.qwikpe.callback.handler.service.uhi.UHICommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,5 @@
-package org.qwikpe.callback.handler.controller;
+package org.qwikpe.callback.handler.controller.uhi;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.qwikpe.callback.handler.service.uhi.UHICommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
