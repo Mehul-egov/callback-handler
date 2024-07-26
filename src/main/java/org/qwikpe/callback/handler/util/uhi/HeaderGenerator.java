@@ -1,4 +1,4 @@
-package org.qwikpe.callback.handler.util;
+package org.qwikpe.callback.handler.util.uhi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,11 +7,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.Signature;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +35,14 @@ public class HeaderGenerator {
                 payload,
                 getPrivateKey("Ed25519", Base64.getDecoder().decode(privateKey))
         );
+    }
+
+    public boolean verifyHeader(String signature,String created, String expires, String public_key, String payload) throws Exception{
+
+        String hashedSigningString = this.generateBlakeHash(
+                this.getSigningString(Long.parseLong(created), Long.parseLong(expires), payload));
+
+        return this.verifySignature(hashedSigningString, signature, "Ed25519", this.getPublicKey("Ed25519", Base64.getDecoder().decode(public_key)));
     }
 
     private String generateAuthorizationParams(String subscriberId, String pub_key_id, String payload,
@@ -107,5 +113,23 @@ public class HeaderGenerator {
 
     private String hash(String payload) {
         return generateBlakeHash(payload);
+    }
+
+    private static PublicKey getPublicKey(String algo, byte[] jceBytes) throws Exception {
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(jceBytes);
+        return KeyFactory.getInstance(algo, BouncyCastleProvider.PROVIDER_NAME)
+                .generatePublic(x509EncodedKeySpec);
+    }
+
+    private boolean verifySignature(String payload, String signature, String signatureAlgorithm, PublicKey pKey)
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, SignatureException {
+        byte[] data = payload.getBytes();
+        byte[] signatureBytes = Base64.getDecoder().decode(signature);
+        // try {
+        Signature s = Signature.getInstance(signatureAlgorithm, provider);
+        s.initVerify(pKey);
+        s.update(data);
+
+        return s.verify(signatureBytes);
     }
 }

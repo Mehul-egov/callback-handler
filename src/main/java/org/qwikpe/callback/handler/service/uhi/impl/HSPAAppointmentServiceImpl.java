@@ -44,9 +44,9 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
         try {
             Map<String, String> headers = new HashMap<>();
 
-            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.SELECT_SLOT, headers, jsonNode, JsonNode.class, 1);
+            JsonNode onInitResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.SELECT_SLOT, headers, jsonNode, JsonNode.class, 1);
 
-            return ResponseEntity.ok(onSearchResponse);
+            return ResponseEntity.ok(onInitResponse);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -57,9 +57,48 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
         try {
             Map<String, String> headers = new HashMap<>();
 
-            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.BOOK_SLOT, headers, jsonNode, JsonNode.class, 1);
+            JsonNode onConfirmResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.BOOK_SLOT, headers, jsonNode, JsonNode.class, 1);
 
-            return ResponseEntity.ok(onSearchResponse);
+            return ResponseEntity.ok(onConfirmResponse);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<JsonNode> cancelSlot(JsonNode jsonNode) throws JsonProcessingException {
+        try {
+            Map<String, String> headers = new HashMap<>();
+
+            JsonNode onCancelResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.CANCEL_SLOT, headers, jsonNode, JsonNode.class, 1);
+
+            return ResponseEntity.ok(onCancelResponse);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<JsonNode> sendMessage(JsonNode jsonNode) throws JsonProcessingException {
+        try {
+            Map<String, String> headers = new HashMap<>();
+
+            JsonNode onSMessageResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.MESSAGE, headers, jsonNode, JsonNode.class, 1);
+
+            return ResponseEntity.ok(onSMessageResponse);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<JsonNode> getAppointmentStatus(JsonNode jsonNode) throws JsonProcessingException {
+        try {
+            Map<String, String> headers = new HashMap<>();
+
+            JsonNode onStatusResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.STATUS, headers, jsonNode, JsonNode.class, 1);
+
+            return ResponseEntity.ok(onStatusResponse);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

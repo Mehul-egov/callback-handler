@@ -1,9 +1,14 @@
 package org.qwikpe.callback.handler.controller.uhi;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.servlet.http.HttpServletRequest;
 import org.qwikpe.callback.handler.service.uhi.UHICommonService;
+import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +19,9 @@ public class UhiCallbacks {
 
     @Autowired
     private UHICommonService uhiCommonService;
+
+    @Autowired
+    private UhiApiResponseComponent uhiApiResponseComponent;
 
     @PostMapping(value = "/on_search")
     public void onSearch(@RequestBody String payload) {
@@ -71,12 +79,16 @@ public class UhiCallbacks {
     }
 
     @PostMapping(value = "/on_message")
-    public void onMessage(@RequestBody String payload) {
+    public ResponseEntity<JsonNode> onMessage(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onMessage :: payload: {}", payload);
+            response = uhiCommonService.messageRequest(payload,httpServletRequest);
         } catch (Exception e) {
-            LOGGER.error("onMessage :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+        return response;
     }
 
     @PostMapping(value = "/on_cancel")
