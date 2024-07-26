@@ -105,7 +105,6 @@ public class WebClientUtiImpl implements WebClientUtil{
                             httpHeaders -> {
                                 httpHeaders.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
                                 httpHeaders.setAccept(List.of(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE)));
-//                                httpHeaders.setBearerAuth(accessToken);
                                 for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
                                     httpHeaders.add(stringStringEntry.getKey(), stringStringEntry.getValue());
                                 }
@@ -132,7 +131,6 @@ public class WebClientUtiImpl implements WebClientUtil{
             return postMethod(baserUrl, uri, headers, body, type, maxRetryCount);
         } catch (WebClientResponseException.Unauthorized | WebClientResponseException.Forbidden wr) {
             LOGGER.error("postMethod :: Unauthorized or forbidden error, so retrying, uri: {}", uri, wr);
-//            setAbdmAccessToken();
 
             --maxRetryCount;
             if (maxRetryCount == 0) {

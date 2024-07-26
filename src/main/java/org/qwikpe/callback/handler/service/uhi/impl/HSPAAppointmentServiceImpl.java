@@ -53,7 +53,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
     }
 
     @Override
-    public ResponseEntity<JsonNode> bookedSlot(JsonNode jsonNode) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> bookedSlot(JsonNode jsonNode) {
         try {
             Map<String, String> headers = new HashMap<>();
 
@@ -66,7 +66,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
     }
 
     @Override
-    public ResponseEntity<JsonNode> cancelSlot(JsonNode jsonNode) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> cancelSlot(JsonNode jsonNode) {
         try {
             Map<String, String> headers = new HashMap<>();
 
@@ -79,7 +79,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
     }
 
     @Override
-    public ResponseEntity<JsonNode> sendMessage(JsonNode jsonNode) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> sendMessage(JsonNode jsonNode) {
         try {
             Map<String, String> headers = new HashMap<>();
 
@@ -92,7 +92,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
     }
 
     @Override
-    public ResponseEntity<JsonNode> getAppointmentStatus(JsonNode jsonNode) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> getAppointmentStatus(JsonNode jsonNode) {
         try {
             Map<String, String> headers = new HashMap<>();
 

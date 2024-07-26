@@ -44,9 +44,13 @@ public class UhiHeaderServiceImpl implements UhiHeaderService {
             if(userType.equals("EUA")) {
                 lookupDto.setSubscriber_id(payloadJson.get("context").get("consumer_id").asText());
                 lookupDto.setSubscriberUrl(payloadJson.get("context").get("consumer_uri").asText());
-            } else {
+            } else if(userType.equals("HSPA")){
                 lookupDto.setSubscriber_id(payloadJson.get("context").get("provider_id").asText());
-                lookupDto.setSubscriber_id(payloadJson.get("context").get("provider_uri").asText());
+                lookupDto.setSubscriberUrl(payloadJson.get("context").get("provider_uri").asText());
+            }
+            else {
+                lookupDto.setSubscriber_id("gateway-nha");
+                lookupDto.setSubscriberUrl("https://hspasbx.abdm.gov.in/api/v1");
             }
             lookupDto.setType(userType);
             lookupDto.setDomain(payloadJson.get("context").get("domain").asText());

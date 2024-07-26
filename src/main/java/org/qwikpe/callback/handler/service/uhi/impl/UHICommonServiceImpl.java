@@ -67,12 +67,24 @@ public class UHICommonServiceImpl implements UHICommonService {
 
         ResponseEntity<JsonNode> response = null;
         try {
-            String authorizationHeader = httpServletRequest.getHeader("Authorization");
+            JsonNode jsonNode = objectMapper.readTree(payload);
+
+            String authorizationHeader;
+            String userType;
+            if(jsonNode.get("context").get("provider_uri") == null) {
+                authorizationHeader = httpServletRequest.getHeader("x-gateway-authorization");
+                userType = "Gateway";
+            }
+            else {
+                authorizationHeader = httpServletRequest.getHeader("Authorization");
+                userType = "EUA";
+            }
+
+            System.out.println("Header:: " + authorizationHeader);
 
             if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
+                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
                     CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                             jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
                     );

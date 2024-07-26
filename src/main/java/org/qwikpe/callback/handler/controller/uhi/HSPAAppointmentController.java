@@ -38,7 +38,7 @@ public class HSPAAppointmentController {
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-
+        LOGGER.error("Responcse :: "+response);
         return response;
     }
 
@@ -53,7 +53,7 @@ public class HSPAAppointmentController {
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-
+        LOGGER.error("Responcse :: "+response);
         return response;
     }
 
@@ -68,7 +68,7 @@ public class HSPAAppointmentController {
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-
+        LOGGER.error("Responcse :: "+response);
         return response;
     }
 
@@ -83,7 +83,7 @@ public class HSPAAppointmentController {
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-
+        LOGGER.error("Responcse :: "+response);
         return response;
     }
 
@@ -98,7 +98,7 @@ public class HSPAAppointmentController {
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-
+        LOGGER.error("Responcse :: "+response);
         return response;
     }
 }
