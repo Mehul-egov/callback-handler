@@ -2,8 +2,8 @@ package org.qwikpe.callback.handler.util.uhi;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
-import org.qwikpe.callback.handler.domain.uhi.CredentialsInfo;
-import org.qwikpe.callback.handler.repository.uhi.CredentialsInfoRepository;
+import org.qwikpe.callback.handler.domain.b2b.uhi.CredentialsInfo;
+import org.qwikpe.callback.handler.repository.b2b.uhi.CredentialsInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +27,6 @@ public class CredentialList {
 
         return credentialsInfoList.stream().filter(
                 obj -> (obj.getDomain().equals(domain) && obj.getSubscriberId().equals(subscriberId))
-        ).toList().get(0);
+        ).findFirst().orElse(null);
     }
 }

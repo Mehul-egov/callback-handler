@@ -3,23 +3,21 @@ package org.qwikpe.callback.handler.service.uhi.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import org.qwikpe.callback.handler.domain.uhi.CredentialsInfo;
-import org.qwikpe.callback.handler.service.uhi.BloodService;
-import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
-import org.qwikpe.callback.handler.service.uhi.UHICommonService;
-import org.qwikpe.callback.handler.service.uhi.UhiHeaderService;
+import org.qwikpe.callback.handler.domain.b2b.uhi.CredentialsInfo;
+import org.qwikpe.callback.handler.service.uhi.*;
+import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.uhi.CredentialList;
 import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+
+import java.util.Enumeration;
 
 @Service
 public class UHICommonServiceImpl implements UHICommonService {
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private BloodService bloodService;
@@ -28,7 +26,7 @@ public class UHICommonServiceImpl implements UHICommonService {
     private CredentialList credentialList;
 
     @Autowired
-    private HSPAAppointmentService hspaAppointmentService;
+    private HPRAppointmentService HPRAppointmentService;
 
     @Autowired
     private UhiApiResponseComponent uhiApiResponseComponent;
@@ -36,29 +34,65 @@ public class UHICommonServiceImpl implements UHICommonService {
     @Autowired
     private UhiHeaderService uhiHeaderService;
 
+    @Autowired
+    private PHRAppointmentService phrAppointmentService;
+
     @Override
-    public void searchResponse(String payload) {
+    public ResponseEntity<JsonNode> searchResponse(String payload, HttpServletRequest httpServletRequest) {
 
         try {
-            JsonNode jsonNode = objectMapper.readTree(payload);
+            JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
 
             CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                     jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("consumer_id").asText()
             );
 
+            if(credentialsInfo == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
+            }
+
+            String authorizationHeader = null;
+            String userType = null;
+            Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+            while (headerNames.hasMoreElements()){
+                if(headerNames.nextElement().equals("x-gateway-authorization")) {
+                    authorizationHeader = httpServletRequest.getHeader("x-gateway-authorization");
+                    userType = "Gateway";
+                }
+            }
+            if(authorizationHeader == null) {
+                authorizationHeader = httpServletRequest.getHeader("Authorization");
+                userType = "HSPA";
+            }
+
+            if(authorizationHeader == null || authorizationHeader.isEmpty()){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
+            }
+
+            if(!uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
+            }
+
             switch(credentialsInfo.getDomainName()) {
 
                 case "Blood Banks" :
                     if(jsonNode.get("context").get("provider_id").asText().equals("cdac.hspa")) {
-                        bloodService.setAllBloodData(jsonNode);
+                        return bloodService.setAllBloodData(jsonNode);
                     }
-                    break;
 
                 case "TeleConsultation" :
-                    break;
+                    if(userType.equals("Gateway")){
+                        return phrAppointmentService.searchDoctorResponse(jsonNode);
+                    }
+                    else {
+                        return phrAppointmentService.searchSlotResponse(jsonNode);
+                    }
+
+                default:
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
             }
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
     }
 
@@ -67,7 +101,7 @@ public class UHICommonServiceImpl implements UHICommonService {
 
         ResponseEntity<JsonNode> response = null;
         try {
-            JsonNode jsonNode = objectMapper.readTree(payload);
+            JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
 
             String authorizationHeader;
             String userType;
@@ -79,8 +113,6 @@ public class UHICommonServiceImpl implements UHICommonService {
                 authorizationHeader = httpServletRequest.getHeader("Authorization");
                 userType = "EUA";
             }
-
-            System.out.println("Header:: " + authorizationHeader);
 
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
@@ -98,7 +130,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                                 break;
 
                             case "TeleConsultation" :
-                                response = hspaAppointmentService.searchDoctorAndSlot(jsonNode);
+                                response = HPRAppointmentService.searchDoctorAndSlot(jsonNode);
                         }
                     }
                 } else {
@@ -123,7 +155,7 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
+                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
 
                     CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                             jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
@@ -138,7 +170,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                                 break;
 
                             case "TeleConsultation" :
-                                response = hspaAppointmentService.selectSlot(jsonNode);
+                                response = HPRAppointmentService.selectSlot(jsonNode);
                         }
                     }
                 } else {
@@ -163,7 +195,7 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
+                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
                     CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                             jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
                     );
@@ -177,7 +209,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                                 break;
 
                             case "TeleConsultation" :
-                                response = hspaAppointmentService.bookedSlot(jsonNode);
+                                response = HPRAppointmentService.bookedSlot(jsonNode);
                         }
                     }
                 } else {
@@ -201,7 +233,7 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
+                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
                     CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                             jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
                     );
@@ -215,7 +247,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                                 break;
 
                             case "TeleConsultation" :
-                                response = hspaAppointmentService.cancelSlot(jsonNode);
+                                response = HPRAppointmentService.cancelSlot(jsonNode);
                         }
                     }
                 } else {
@@ -239,8 +271,8 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
-                    response = hspaAppointmentService.sendMessage(jsonNode);
+                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
+                    response = HPRAppointmentService.sendMessage(jsonNode);
                 } else {
                     response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
                 }
@@ -262,7 +294,7 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = objectMapper.readTree(payload);
+                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
                     CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                             jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
                     );
@@ -276,7 +308,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                                 break;
 
                             case "TeleConsultation" :
-                                response = hspaAppointmentService.getAppointmentStatus(jsonNode);
+                                response = HPRAppointmentService.getAppointmentStatus(jsonNode);
                         }
                     }
                 } else {

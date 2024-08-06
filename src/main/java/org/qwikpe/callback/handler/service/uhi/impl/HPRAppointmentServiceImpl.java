@@ -1,8 +1,7 @@
 package org.qwikpe.callback.handler.service.uhi.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
+import org.qwikpe.callback.handler.service.uhi.HPRAppointmentService;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.WebClientUtil;
 import org.slf4j.Logger;
@@ -15,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HSPAAppointmentServiceImpl.class);
+public class HPRAppointmentServiceImpl implements HPRAppointmentService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HPRAppointmentServiceImpl.class);
 
     @Autowired
     private WebClientUtil webClientUtil;

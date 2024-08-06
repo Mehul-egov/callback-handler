@@ -1,7 +1,8 @@
 package org.qwikpe.callback.handler.service.uhi;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.ResponseEntity;
 
 public interface BloodService {
-    public void setAllBloodData(JsonNode bloodData);
+    ResponseEntity<JsonNode> setAllBloodData(JsonNode bloodData);
 }

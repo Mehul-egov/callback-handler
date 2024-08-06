@@ -14,5 +14,4 @@ public class CallbackHandlerApplication {
 		Security.addProvider(new BouncyCastleProvider());
 		SpringApplication.run(CallbackHandlerApplication.class, args);
 	}
-
 }

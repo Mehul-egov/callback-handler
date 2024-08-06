@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UhiCallbacks {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UhiCallbacks.class);
+public class PHRAppointmentController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PHRAppointmentController.class);
 
     @Autowired
     private UHICommonService uhiCommonService;
@@ -24,13 +24,18 @@ public class UhiCallbacks {
     private UhiApiResponseComponent uhiApiResponseComponent;
 
     @PostMapping(value = "/on_search")
-    public void onSearch(@RequestBody String payload) {
+    public ResponseEntity<JsonNode> onSearch(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onSearch :: payload: {}", payload);
-            uhiCommonService.searchResponse(payload);
+            response = uhiCommonService.searchResponse(payload,httpServletRequest);
         } catch (Exception e) {
             LOGGER.error("onSearch :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+
+        return response;
     }
 
     @PostMapping(value = "/on_select")

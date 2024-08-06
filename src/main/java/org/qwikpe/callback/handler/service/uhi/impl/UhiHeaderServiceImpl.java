@@ -2,7 +2,7 @@ package org.qwikpe.callback.handler.service.uhi.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.qwikpe.callback.handler.domain.uhi.CredentialsInfo;
+import org.qwikpe.callback.handler.domain.b2b.uhi.CredentialsInfo;
 import org.qwikpe.callback.handler.dto.uhi.LookupDto;
 import org.qwikpe.callback.handler.service.uhi.UhiHeaderService;
 import org.qwikpe.callback.handler.util.Constants;

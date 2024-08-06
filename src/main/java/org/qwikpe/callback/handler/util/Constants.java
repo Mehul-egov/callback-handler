@@ -25,8 +25,6 @@ public class Constants {
     // UHI Constant
     public static final String UHI_BASE_URL = "https://uhigatewaysandbox.abdm.gov.in/api/v1";
 
-    public static final String UHI_ON_SEARCH = "/on_search";
-
     public static final String LOOKUP = "/networkregistry/lookup";
 
     public static final String MASTER_URL = "http://localhost:9093";
@@ -48,5 +46,11 @@ public class Constants {
     public static final String STATUS = "/status";
 
     public static final String MESSAGE = "/receive-message";
+
+    public static final String PHR_APPOINTMENT_BASE_URI = "http://localhost:9091/phr-appointment";
+
+    public static final String DOCTOR_SEARCH_RESPONSE = "/search/doctor-response";
+
+    public static final String SLOT_SEARCH_RESPONSE = "/search/slot-response";
 }
 

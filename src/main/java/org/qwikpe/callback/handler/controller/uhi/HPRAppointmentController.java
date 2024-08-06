@@ -1,10 +1,7 @@
 package org.qwikpe.callback.handler.controller.uhi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import org.qwikpe.callback.handler.service.uhi.HSPAAppointmentService;
 import org.qwikpe.callback.handler.service.uhi.UHICommonService;
 import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
 import org.slf4j.Logger;
@@ -15,11 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.netty.http.server.HttpServerRequest;
 
 @RestController
-public class HSPAAppointmentController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HSPAAppointmentController.class);
+public class HPRAppointmentController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HPRAppointmentController.class);
 
     @Autowired
     private UHICommonService uhiCommonService;

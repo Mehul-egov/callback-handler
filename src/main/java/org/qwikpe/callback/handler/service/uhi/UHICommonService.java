@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface UHICommonService {
 
-    void searchResponse(String payload);
+    ResponseEntity<JsonNode> searchResponse(String payload, HttpServletRequest httpServletRequest);
+
     ResponseEntity<JsonNode> searchRequest(String payload, HttpServletRequest httpServletRequest);
     ResponseEntity<JsonNode> initRequest(String payload, HttpServletRequest httpServletRequest);
     ResponseEntity<JsonNode> confirmRequest(String payload, HttpServletRequest httpServletRequest);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UhiApiResponseComponent {
 
     public JsonNode successResponse() {
-        final ApiResponseMessageDto apiResponseMessageDto = new ApiResponseMessageDto("ACK");
+        ApiResponseMessageDto apiResponseMessageDto = new ApiResponseMessageDto("ACK");
         return Constants.JACK_OBJ_MAPPER.convertValue(apiResponseMessageDto, JsonNode.class);
     }
 

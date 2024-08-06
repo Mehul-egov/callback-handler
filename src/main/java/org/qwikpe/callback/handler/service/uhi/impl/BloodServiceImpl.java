@@ -5,9 +5,12 @@ import lombok.Builder;
 import org.qwikpe.callback.handler.service.uhi.BloodService;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.WebClientUtil;
+import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -23,18 +26,24 @@ public class BloodServiceImpl implements BloodService {
     @Autowired
     private WebClientUtil webClientUtil;
 
-    public void setAllBloodData(JsonNode bloodData) {
+    @Autowired
+    private UhiApiResponseComponent uhiApiResponseComponent;
 
+    public ResponseEntity<JsonNode> setAllBloodData(JsonNode bloodData) {
+
+        ResponseEntity<JsonNode> response = null;
         BufferedReader br = null;
         try {
             Map<String, String> headers = new HashMap<>();
 
-            String onSearchResponse = webClientUtil.postMethod(Constants.MASTER_URL, Constants.SET_BLOOD_DATA, headers, bloodData, String.class, 1);
+            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.MASTER_URL, Constants.SET_BLOOD_DATA, headers, bloodData, JsonNode.class, 1);
 
-            LOGGER.info("set Blood data response :: {}", onSearchResponse);
+            response = ResponseEntity.ok(onSearchResponse);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+
+        return response;
     }
 }
