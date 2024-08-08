@@ -13,7 +13,21 @@ logging:
 server:
   port: 9092
 
+values:
+  es:
+    host: "13.232.39.184"
+    port: 9200
+
 secret:
   abdm:
     clientId: SBXID_007285
     clientSecret: 25a4bf63-da0c-486c-aa53-ce9bd4fbe54a
+  data:
+    transfer:
+      nonce: 7zzeKBpkHkRn3+FbefZALuqL0BUqvav7p06q/QElv2M=
+      privateKey: BaNPxRG8DrmwdFqEjZoU6PzTeY1vaRaKHBErT0COA24=
+      publicKey: BD+413iSaxmVtPCxFTwktSLfZQRNj56VQMkl/4x5M0GjD/RSremyjs8+K4B6MzV97PGUZI96MHDvUZjcbvVI8RI=
+
+#springdoc:
+#  api-docs:
+#    path: /callback-handler

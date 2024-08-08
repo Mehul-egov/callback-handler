@@ -29,7 +29,7 @@ public class BloodServiceImpl implements BloodService {
         try {
             Map<String, String> headers = new HashMap<>();
 
-            String onSearchResponse = webClientUtil.postMethod(Constants.MASTER_URL, Constants.SET_BLOOD_DATA, headers, bloodData, String.class, 1);
+            String onSearchResponse = webClientUtil.postMethod(Constants.MASTER_URL, Constants.SET_BLOOD_DATA, headers, bloodData, String.class, 1, null);
 
             LOGGER.info("set Blood data response :: {}", onSearchResponse);
 

@@ -14,14 +14,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
 
-        LOGGER.error("RuntimeException :: ",ex);
+        LOGGER.error("RuntimeException :: ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Object> exceptionName(CustomException customException) {
 
-        LOGGER.error("CustomException :: ",customException);
+        LOGGER.error("CustomException :: ", customException);
         return ResponseEntity.status(customException.getErrorCode()).body(customException.getMessage());
     }
 }

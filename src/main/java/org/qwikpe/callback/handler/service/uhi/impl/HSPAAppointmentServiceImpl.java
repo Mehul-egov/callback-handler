@@ -31,7 +31,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
             else
                 uri = Constants.SEARCH_SLOT;
 
-            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, uri, headers, jsonNode, JsonNode.class, 1);
+            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, uri, headers, jsonNode, JsonNode.class, 1, null);
 
             return ResponseEntity.ok(onSearchResponse);
         } catch (Exception ex) {
@@ -44,7 +44,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
         try {
             Map<String, String> headers = new HashMap<>();
 
-            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.SELECT_SLOT, headers, jsonNode, JsonNode.class, 1);
+            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.SELECT_SLOT, headers, jsonNode, JsonNode.class, 1, null);
 
             return ResponseEntity.ok(onSearchResponse);
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class HSPAAppointmentServiceImpl implements HSPAAppointmentService {
         try {
             Map<String, String> headers = new HashMap<>();
 
-            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.BOOK_SLOT, headers, jsonNode, JsonNode.class, 1);
+            JsonNode onSearchResponse = webClientUtil.postMethod(Constants.APPOINTMENT_BASE_URI, Constants.BOOK_SLOT, headers, jsonNode, JsonNode.class, 1, null);
 
             return ResponseEntity.ok(onSearchResponse);
         } catch (Exception e) {
