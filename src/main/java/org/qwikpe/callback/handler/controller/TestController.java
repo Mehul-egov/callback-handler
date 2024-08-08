@@ -1,6 +1,7 @@
 package org.qwikpe.callback.handler.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.apache.tomcat.util.bcel.Const;
 import org.qwikpe.callback.handler.dto.CareContextDTORef;
 import org.qwikpe.callback.handler.service.uhi.BloodService;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.locks.Condition;
 
 @RestController
 public class TestController {
@@ -88,7 +88,7 @@ public class TestController {
             }};
 
             JsonNode jsonNode = webClientUtil.postMethod(URIMapping.ABDM_BASE_URL, "/api/v3/hiecm/user-initiated-linking/patient/care-context/on-discover"
-                    , headers, careContext, JsonNode.class, Constants.MAX_RETRY);
+                    , headers, careContext, JsonNode.class, Constants.MAX_RETRY, null);
 
             LOGGER.info("on_Discover_Response(v0.5) :: {}", jsonNode);
 

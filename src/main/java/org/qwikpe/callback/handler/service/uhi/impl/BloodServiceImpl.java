@@ -6,6 +6,7 @@ import org.qwikpe.callback.handler.service.uhi.BloodService;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.WebClientUtil;
 import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
+import org.qwikpe.callback.handler.util.uhi.UhiWebClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class BloodServiceImpl implements BloodService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BloodServiceImpl.class);
 
     @Autowired
-    private WebClientUtil webClientUtil;
+    private UhiWebClientUtil webClientUtil;
 
     @Autowired
     private UhiApiResponseComponent uhiApiResponseComponent;

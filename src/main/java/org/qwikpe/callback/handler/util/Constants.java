@@ -1,7 +1,5 @@
 package org.qwikpe.callback.handler.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Controller;
 
 @Controller
