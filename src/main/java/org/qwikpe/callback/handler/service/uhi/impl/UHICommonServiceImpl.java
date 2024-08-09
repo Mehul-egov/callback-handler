@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.qwikpe.callback.handler.domain.b2b.uhi.CredentialsInfo;
 import org.qwikpe.callback.handler.service.uhi.*;
+import org.qwikpe.callback.handler.util.Common;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.uhi.CredentialList;
 import org.qwikpe.callback.handler.util.uhi.UhiApiResponseComponent;
@@ -40,7 +41,7 @@ public class UHICommonServiceImpl implements UHICommonService {
     @Override
     public ResponseEntity<JsonNode> phrApiResponse(String payload, HttpServletRequest httpServletRequest) {
         try {
-            JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
+            JsonNode jsonNode = Common.JACK_OBJ_MAPPER.readTree(payload);
 
             CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                     jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("consumer_id").asText()
@@ -83,7 +84,7 @@ public class UHICommonServiceImpl implements UHICommonService {
     @Override
     public ResponseEntity<JsonNode> hprApiRequest(String payload, HttpServletRequest httpServletRequest) {
         try {
-            JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
+            JsonNode jsonNode = Common.JACK_OBJ_MAPPER.readTree(payload);
 
             CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                     jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
@@ -124,7 +125,7 @@ public class UHICommonServiceImpl implements UHICommonService {
             if(authorizationHeader != null) {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
-                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
+                    JsonNode jsonNode = Common.JACK_OBJ_MAPPER.readTree(payload);
                     response = hprAppointmentService.callHprTeleconsultationApi(jsonNode);
                 } else {
                     response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());

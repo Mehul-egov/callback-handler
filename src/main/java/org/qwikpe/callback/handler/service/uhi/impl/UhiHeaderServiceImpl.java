@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.qwikpe.callback.handler.domain.b2b.uhi.CredentialsInfo;
 import org.qwikpe.callback.handler.dto.uhi.LookupDto;
 import org.qwikpe.callback.handler.service.uhi.UhiHeaderService;
+import org.qwikpe.callback.handler.util.Common;
 import org.qwikpe.callback.handler.util.Constants;
 import org.qwikpe.callback.handler.util.uhi.CredentialList;
 import org.qwikpe.callback.handler.util.uhi.HeaderGenerator;
@@ -31,8 +32,8 @@ public class UhiHeaderServiceImpl implements UhiHeaderService {
     public boolean verifyHeader(String header, String payload, String userType) {
 
         try {
-            JsonNode headerJson = Constants.JACK_OBJ_MAPPER.readTree(header);
-            JsonNode payloadJson = Constants.JACK_OBJ_MAPPER.readTree(payload);
+            JsonNode headerJson = Common.JACK_OBJ_MAPPER.readTree(header);
+            JsonNode payloadJson = Common.JACK_OBJ_MAPPER.readTree(payload);
 
             String expires = headerJson.get("expires").asText();
             String created = headerJson.get("created").asText();
@@ -58,7 +59,7 @@ public class UhiHeaderServiceImpl implements UhiHeaderService {
             lookupDto.setCity(payloadJson.get("context").get("city").asText());
             lookupDto.setPub_key_id(publicKeyId);
 
-            JsonNode lookupPayloadJson = Constants.JACK_OBJ_MAPPER.convertValue(lookupDto, JsonNode.class);
+            JsonNode lookupPayloadJson = Common.JACK_OBJ_MAPPER.convertValue(lookupDto, JsonNode.class);
             CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
                     lookupDto.getDomain(),
                     payloadJson.get("context").get("provider_id").asText()
