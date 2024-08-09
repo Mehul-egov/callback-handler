@@ -6,12 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface UHICommonService {
 
-    ResponseEntity<JsonNode> searchResponse(String payload, HttpServletRequest httpServletRequest);
+    ResponseEntity<JsonNode> phrApiResponse(String payload,HttpServletRequest httpServletRequest);
+    ResponseEntity<JsonNode> messageResponse(String payload,HttpServletRequest httpServletRequest);
 
-    ResponseEntity<JsonNode> searchRequest(String payload, HttpServletRequest httpServletRequest);
-    ResponseEntity<JsonNode> initRequest(String payload, HttpServletRequest httpServletRequest);
-    ResponseEntity<JsonNode> confirmRequest(String payload, HttpServletRequest httpServletRequest);
-    ResponseEntity<JsonNode> cancelRequest(String payload, HttpServletRequest httpServletRequest);
-    ResponseEntity<JsonNode> messageRequest(String payload, HttpServletRequest httpServletRequest);
-    ResponseEntity<JsonNode> statusRequest(String payload, HttpServletRequest httpServletRequest);
+    ResponseEntity<JsonNode> hprApiRequest(String payload,HttpServletRequest httpServletRequest);
+    ResponseEntity<JsonNode> messageRequest(String payload,HttpServletRequest httpServletRequest);
 }

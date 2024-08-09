@@ -26,7 +26,7 @@ public class UHICommonServiceImpl implements UHICommonService {
     private CredentialList credentialList;
 
     @Autowired
-    private HPRAppointmentService HPRAppointmentService;
+    private HPRAppointmentService hprAppointmentService;
 
     @Autowired
     private UhiApiResponseComponent uhiApiResponseComponent;
@@ -38,8 +38,7 @@ public class UHICommonServiceImpl implements UHICommonService {
     private PHRAppointmentService phrAppointmentService;
 
     @Override
-    public ResponseEntity<JsonNode> searchResponse(String payload, HttpServletRequest httpServletRequest) {
-
+    public ResponseEntity<JsonNode> phrApiResponse(String payload, HttpServletRequest httpServletRequest) {
         try {
             JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
 
@@ -65,43 +64,34 @@ public class UHICommonServiceImpl implements UHICommonService {
                 userType = "HSPA";
             }
 
-            if(authorizationHeader == null || authorizationHeader.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
+            JsonNode headerVerifyResponse = this.verifyAuthorizationHeader(authorizationHeader,payload,userType);
+            if(headerVerifyResponse != null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headerVerifyResponse);
             }
 
-            if(!uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-            }
-
-            switch(credentialsInfo.getDomainName()) {
-
-                case "Blood Banks" :
-                    if(jsonNode.get("context").get("provider_id").asText().equals("cdac.hspa")) {
-                        return bloodService.setAllBloodData(jsonNode);
-                    }
-
-                case "TeleConsultation" :
-                    if(userType.equals("Gateway")){
-                        return phrAppointmentService.searchDoctorResponse(jsonNode);
-                    }
-                    else {
-                        return phrAppointmentService.searchSlotResponse(jsonNode);
-                    }
-
-                default:
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
+            return this.sentDataCallbackToEua(credentialsInfo,jsonNode,userType);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
     @Override
-    public ResponseEntity<JsonNode> searchRequest(String payload, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<JsonNode> messageResponse(String payload, HttpServletRequest httpServletRequest) {
+        return null;
+    }
 
-        ResponseEntity<JsonNode> response = null;
+    @Override
+    public ResponseEntity<JsonNode> hprApiRequest(String payload, HttpServletRequest httpServletRequest) {
         try {
             JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
+
+            CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
+                    jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
+            );
+
+            if(credentialsInfo == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
+            }
 
             String authorizationHeader;
             String userType;
@@ -114,152 +104,15 @@ public class UHICommonServiceImpl implements UHICommonService {
                 userType = "EUA";
             }
 
-            if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
-
-                    CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
-                            jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
-                    );
-
-                    if(credentialsInfo == null) {
-                        response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-                    } else {
-                        switch(credentialsInfo.getDomainName()) {
-
-                            case "Blood Banks" :
-                                break;
-
-                            case "TeleConsultation" :
-                                response = HPRAppointmentService.searchDoctorAndSlot(jsonNode);
-                        }
-                    }
-                } else {
-                    response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-                }
-            } else {
-                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
+            JsonNode headerVerifyResponse = this.verifyAuthorizationHeader(authorizationHeader,payload,userType);
+            if(headerVerifyResponse != null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headerVerifyResponse);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+
+            return this.sentDataCallbackToHspa(credentialsInfo,jsonNode);
+        } catch(Exception exception) {
+            throw new RuntimeException(exception.getMessage());
         }
-        return response;
-    }
-
-    @Override
-    public ResponseEntity<JsonNode> initRequest(String payload, HttpServletRequest httpServletRequest) {
-
-        ResponseEntity<JsonNode> response = null;
-        try {
-            String authorizationHeader = httpServletRequest.getHeader("Authorization");
-
-            if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
-
-                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
-
-                    CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
-                            jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
-                    );
-
-                    if(credentialsInfo == null) {
-                        response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-                    } else {
-                        switch(credentialsInfo.getDomainName()) {
-
-                            case "Blood Banks" :
-                                break;
-
-                            case "TeleConsultation" :
-                                response = HPRAppointmentService.selectSlot(jsonNode);
-                        }
-                    }
-                } else {
-                    response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-                }
-            } else {
-                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return response;
-    }
-
-    @Override
-    public ResponseEntity<JsonNode> confirmRequest(String payload, HttpServletRequest httpServletRequest) {
-
-        ResponseEntity<JsonNode> response = null;
-        try {
-            String authorizationHeader = httpServletRequest.getHeader("Authorization");
-
-            if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
-
-                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
-                    CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
-                            jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
-                    );
-
-                    if(credentialsInfo == null) {
-                        response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-                    } else {
-                        switch(credentialsInfo.getDomainName()) {
-
-                            case "Blood Banks" :
-                                break;
-
-                            case "TeleConsultation" :
-                                response = HPRAppointmentService.bookedSlot(jsonNode);
-                        }
-                    }
-                } else {
-                    response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-                }
-            } else {
-                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return response;
-    }
-
-    @Override
-    public ResponseEntity<JsonNode> cancelRequest(String payload, HttpServletRequest httpServletRequest) {
-        ResponseEntity<JsonNode> response = null;
-        try {
-            String authorizationHeader = httpServletRequest.getHeader("Authorization");
-
-            if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
-
-                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
-                    CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
-                            jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
-                    );
-
-                    if(credentialsInfo == null) {
-                        response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-                    } else {
-                        switch(credentialsInfo.getDomainName()) {
-
-                            case "Blood Banks" :
-                                break;
-
-                            case "TeleConsultation" :
-                                response = HPRAppointmentService.cancelSlot(jsonNode);
-                        }
-                    }
-                } else {
-                    response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-                }
-            } else {
-                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return response;
     }
 
     @Override
@@ -272,7 +125,7 @@ public class UHICommonServiceImpl implements UHICommonService {
                 if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
 
                     JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
-                    response = HPRAppointmentService.sendMessage(jsonNode);
+                    response = hprAppointmentService.callHprTeleconsultationApi(jsonNode);
                 } else {
                     response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
                 }
@@ -285,41 +138,56 @@ public class UHICommonServiceImpl implements UHICommonService {
         return response;
     }
 
-    @Override
-    public ResponseEntity<JsonNode> statusRequest(String payload, HttpServletRequest httpServletRequest) {
+    private ResponseEntity<JsonNode> sentDataCallbackToHspa(
+            CredentialsInfo credentialsInfo, JsonNode jsonNode) throws RuntimeException{
+
         ResponseEntity<JsonNode> response = null;
-        try {
-            String authorizationHeader = httpServletRequest.getHeader("Authorization");
+        switch(credentialsInfo.getDomainName()) {
 
-            if(authorizationHeader != null) {
-                if(uhiHeaderService.verifyHeader(authorizationHeader,payload,"EUA")) {
+            case "Blood Banks" :
+                break;
 
-                    JsonNode jsonNode = Constants.JACK_OBJ_MAPPER.readTree(payload);
-                    CredentialsInfo credentialsInfo = credentialList.getCredentialsInfo(
-                            jsonNode.get("context").get("domain").asText(), jsonNode.get("context").get("provider_id").asText()
-                    );
+            case "TeleConsultation" :
+                response = hprAppointmentService.callHprTeleconsultationApi(jsonNode);
+                break;
 
-                    if(credentialsInfo == null) {
-                        response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
-                    } else {
-                        switch(credentialsInfo.getDomainName()) {
-
-                            case "Blood Banks" :
-                                break;
-
-                            case "TeleConsultation" :
-                                response = HPRAppointmentService.getAppointmentStatus(jsonNode);
-                        }
-                    }
-                } else {
-                    response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerVerificationFailed());
-                }
-            } else {
+            default:
                 response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
         }
+
         return response;
+    }
+
+    private ResponseEntity<JsonNode> sentDataCallbackToEua(
+            CredentialsInfo credentialsInfo, JsonNode jsonNode,String userType) throws RuntimeException{
+
+        ResponseEntity<JsonNode> response = null;
+        switch(credentialsInfo.getDomainName()) {
+
+            case "Blood Banks" :
+                break;
+
+            case "TeleConsultation" :
+                response = phrAppointmentService.phrApiResponse(jsonNode,userType);
+                break;
+
+            default:
+                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.headerNotFound());
+        }
+
+        return response;
+    }
+
+    private JsonNode verifyAuthorizationHeader(String authorizationHeader,String payload,String userType) {
+
+        if(authorizationHeader == null || authorizationHeader.isEmpty()){
+            return uhiApiResponseComponent.headerNotFound();
+        }
+
+        if(!uhiHeaderService.verifyHeader(authorizationHeader,payload,userType)) {
+            return uhiApiResponseComponent.headerVerificationFailed();
+        }
+
+        return null;
     }
 }

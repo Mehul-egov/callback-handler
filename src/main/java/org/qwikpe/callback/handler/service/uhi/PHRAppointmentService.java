@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 public interface PHRAppointmentService {
 
-    ResponseEntity<JsonNode> searchDoctorResponse(JsonNode responseNode);
-    ResponseEntity<JsonNode> searchSlotResponse(JsonNode responseJsonNode);
+    ResponseEntity<JsonNode> phrApiResponse(JsonNode responseJsonNode,String requestedBy);
 }

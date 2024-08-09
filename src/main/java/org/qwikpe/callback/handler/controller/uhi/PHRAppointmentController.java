@@ -29,7 +29,7 @@ public class PHRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onSearch :: payload: {}", payload);
-            response = uhiCommonService.searchResponse(payload,httpServletRequest);
+            response = uhiCommonService.phrApiResponse(payload,httpServletRequest);
         } catch (Exception e) {
             LOGGER.error("onSearch :: Error", e);
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
@@ -48,30 +48,63 @@ public class PHRAppointmentController {
     }
 
     @PostMapping(value = "/on_init")
-    public void onInit(@RequestBody String payload) {
+    public ResponseEntity<JsonNode> onInit(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onInit :: payload: {}", payload);
+            response = uhiCommonService.phrApiResponse(payload,httpServletRequest);
         } catch (Exception e) {
             LOGGER.error("onInit :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+
+        return response;
     }
 
     @PostMapping(value = "/on_confirm")
-    public void onConfirm(@RequestBody String payload) {
+    public ResponseEntity<JsonNode> onConfirm(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onConfirm :: payload: {}", payload);
+            response = uhiCommonService.phrApiResponse(payload,httpServletRequest);
         } catch (Exception e) {
             LOGGER.error("onConfirm :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+
+        return response;
+    }
+
+    @PostMapping(value = "/on_cancel")
+    public ResponseEntity<JsonNode> onCancel(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
+        try {
+            LOGGER.info("onCancel :: payload: {}", payload);
+            response = uhiCommonService.phrApiResponse(payload,httpServletRequest);
+        } catch (Exception e) {
+            LOGGER.error("onCancel :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
+        }
+
+        return response;
     }
 
     @PostMapping(value = "/on_status")
-    public void onStatus(@RequestBody String payload) {
+    public ResponseEntity<JsonNode> onStatus(@RequestBody String payload, HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("onStatus :: payload: {}", payload);
+            response = uhiCommonService.phrApiResponse(payload,httpServletRequest);
         } catch (Exception e) {
             LOGGER.error("onStatus :: Error", e);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
+
+        return response;
     }
 
     @PostMapping(value = "/on_update")
@@ -94,14 +127,5 @@ public class PHRAppointmentController {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
         return response;
-    }
-
-    @PostMapping(value = "/on_cancel")
-    public void onCancel(@RequestBody String payload) {
-        try {
-            LOGGER.info("onCancel :: payload: {}", payload);
-        } catch (Exception e) {
-            LOGGER.error("onCancel :: Error", e);
-        }
     }
 }

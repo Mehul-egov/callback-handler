@@ -52,5 +52,15 @@ public class Constants {
     public static final String DOCTOR_SEARCH_RESPONSE = "/search/doctor-response";
 
     public static final String SLOT_SEARCH_RESPONSE = "/search/slot-response";
+
+    public static final String INIT_RESPONSE = "/init-response";
+
+    public static final String CONFIRM_RESPONSE = "/confirm-response";
+
+    public static final String CANCEL_RESPONSE = "/cancel-response";
+
+    public static final String STATUS_RESPONSE= "/status-response";
+
+    public static final String MESSAGE_RESPONSE = "/message-response";
 }
 

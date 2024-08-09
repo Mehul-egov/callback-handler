@@ -29,12 +29,12 @@ public class HPRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("Search payload EUA request :: {}", payload);
-            response = uhiCommonService.searchRequest(payload,httpServletRequest);
+            response = uhiCommonService.hprApiRequest(payload,httpServletRequest);
         }
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-        LOGGER.error("Responcse :: "+response);
+        LOGGER.info("Response :: {}",response);
         return response;
     }
 
@@ -44,12 +44,12 @@ public class HPRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("Init payload EUA request :: {}", payload);
-            response = uhiCommonService.initRequest(payload,httpServletRequest);
+            response = uhiCommonService.hprApiRequest(payload,httpServletRequest);
         }
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-        LOGGER.error("Responcse :: "+response);
+        LOGGER.info("Response :: {}",response);
         return response;
     }
 
@@ -59,12 +59,12 @@ public class HPRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("Confirm payload EUA request :: {}", payload);
-            response = uhiCommonService.confirmRequest(payload,httpServletRequest);
+            response = uhiCommonService.hprApiRequest(payload,httpServletRequest);
         }
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-        LOGGER.error("Responcse :: "+response);
+        LOGGER.info("Response :: {}",response);
         return response;
     }
 
@@ -74,12 +74,12 @@ public class HPRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("Cancel payload EUA request :: {}", payload);
-            response = uhiCommonService.cancelRequest(payload,httpServletRequest);
+            response = uhiCommonService.hprApiRequest(payload,httpServletRequest);
         }
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-        LOGGER.error("Responcse :: "+response);
+        LOGGER.info("Response :: {}",response);
         return response;
     }
 
@@ -89,12 +89,12 @@ public class HPRAppointmentController {
         ResponseEntity<JsonNode> response = null;
         try {
             LOGGER.info("Status payload EUA request :: {}", payload);
-            response = uhiCommonService.statusRequest(payload,httpServletRequest);
+            response = uhiCommonService.hprApiRequest(payload,httpServletRequest);
         }
         catch (Exception e) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uhiApiResponseComponent.internalServerError());
         }
-        LOGGER.error("Responcse :: "+response);
+        LOGGER.info("Response :: {}",response);
         return response;
     }
 }
