@@ -53,23 +53,24 @@ public class ConsentCallbacksController {
 
     @PostMapping(value = "/api/v3/hip/token/on-generate-token")
     public void onGenerateToken(@RequestBody Map<String, Object> requestBody,
-                                @RequestHeader("X-HIP-ID") String xHipID,
-                                @RequestHeader(Constants.REQUEST_ID) String abdmRequestId) {
-        try {
-            consentCallbacksService.onGenerateToken(xHipID, requestBody, abdmRequestId);
-        } catch (Exception e) {
-            LOGGER.error("onGenerateToken :: Error while processing the callback response of on-generate-token, payload: {}", requestBody, e);
-        }
+                                @RequestHeader("request-id") String requestId,
+                                @RequestHeader("x-hip-id") String xHipID
+                                ) {
+
+            consentCallbacksService.onGenerateToken(xHipID, requestBody, requestId);
+
     }
 
     @PostMapping(value = "/api/v3/consent/request/hip/notify")
-    public void hipConsentRequestNotify(@RequestBody ConsentRequestHipNotifyDTO consentRequestHipNotifyDTO, @RequestHeader("request-id") String requestId,
-                                        @RequestHeader("X-HIP-ID") String xHipId) throws IOException {
+    public void hipConsentRequestNotify(@RequestBody ConsentRequestHipNotifyDTO consentRequestHipNotifyDTO,
+                                        @RequestHeader("request-id") String requestId,
+                                        @RequestHeader("x-hip-id") String xHipId) throws IOException {
         consentCallbacksService.processConsentRequestHipNotify(consentRequestHipNotifyDTO, requestId, xHipId);
     }
 
     @PostMapping(value = "/api/v3/hip/health-information/request")
-    public void hipHealthInformationRequest(@RequestBody HipRequestDTO hipRequestDTO, @RequestHeader("X-HIP-ID") String xHipId,
+    public void hipHealthInformationRequest(@RequestBody HipRequestDTO hipRequestDTO,
+                                            @RequestHeader("x-hip-id") String xHipId,
                                             @RequestHeader("request-id") String requestId) throws IOException {
         consentCallbacksService.hipHealthInformationRequest(hipRequestDTO, xHipId, requestId);
     }

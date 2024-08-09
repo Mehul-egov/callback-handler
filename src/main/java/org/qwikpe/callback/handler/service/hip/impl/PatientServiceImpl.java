@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -20,14 +19,14 @@ public class PatientServiceImpl implements PatientService {
     private CustomQueries customQueries;
 
     @Override
-    public ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypes(String abhaAddress, List<ConsentRequestHipNotifyDTO.ConsentDetail.CareContext> careContextList, List<String> hiTypes) throws IOException {
+    public ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypesAndQwikpeFacilityId(String abhaAddress, List<ConsentRequestHipNotifyDTO.ConsentDetail.CareContext> careContextList, List<String> hiTypes, String qwikpeFacilityId) throws IOException {
         Set<String> patientReferenceSet = new HashSet<>();
         Set<String> careContextSet = new HashSet<>();
         for (ConsentRequestHipNotifyDTO.ConsentDetail.CareContext careContext : careContextList) {
             patientReferenceSet.add(careContext.getPatientReference());
             careContextSet.add(careContext.getCareContextReference());
         }
-        return customQueries.findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypes(abhaAddress, patientReferenceSet, careContextSet, hiTypes);
+        return customQueries.findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypesAndQwikpeFacilityId(abhaAddress, patientReferenceSet, careContextSet, hiTypes, qwikpeFacilityId);
     }
 
 }

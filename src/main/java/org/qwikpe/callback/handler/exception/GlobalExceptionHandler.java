@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,5 +24,12 @@ public class GlobalExceptionHandler {
 
         LOGGER.error("CustomException :: ", customException);
         return ResponseEntity.status(customException.getErrorCode()).body(customException.getMessage());
+    }
+
+    @ExceptionHandler(CallbackResponseNotAsExpectedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleCallbackResponseNotAsExpectedException(CallbackResponseNotAsExpectedException ex) {
+        LOGGER.error("CallbackResponseNotAsExpectedException :: ", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }

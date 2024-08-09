@@ -7,5 +7,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PatientService {
-    ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypes(String abhaAddress, List<ConsentRequestHipNotifyDTO.ConsentDetail.CareContext> careContextList, List<String> hiTypes) throws IOException;
+    ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypesAndQwikpeFacilityId(String abhaAddress, List<ConsentRequestHipNotifyDTO.ConsentDetail.CareContext> careContextList, List<String> hiTypes, String qwikpeFacilityId) throws IOException;
 }

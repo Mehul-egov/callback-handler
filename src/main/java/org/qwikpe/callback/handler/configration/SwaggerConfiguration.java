@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 url = "https://sandbox.abdm.gov.in/sandbox/v3/"
         )),
         servers = {@Server(description = "Url for localhost", url = "http://localhost:9092"),
-                @Server(description = "Url for development", url = "http://abdm.qwikpe.in/")})
+                @Server(description = "Url for development", url = "https://abdm.qwikpe.in/")})
 
 
 public class SwaggerConfiguration {

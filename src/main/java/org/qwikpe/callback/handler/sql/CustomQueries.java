@@ -25,7 +25,7 @@ public class CustomQueries {
     private EntityManager entityManager;
 
     @SuppressWarnings("unchecked")
-    public ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypes(String abhaAddress, Set<String> patientReferenceSet, Set<String> careContextSet, List<String> recordType) throws IOException {
+    public ValidatedHipNotifyDTO findByAbhaAddressAndCareContextAndPatientReferenceAndHiTypesAndQwikpeFacilityId(String abhaAddress, Set<String> patientReferenceSet, Set<String> careContextSet, List<String> recordType, String qwikpeFacilityId) throws IOException {
         String sql = """
                  SELECT pd.health_id AS abha_address,
                  pd.facility_id AS qwikpe_facility_id,
@@ -47,7 +47,8 @@ public class CustomQueries {
                  WHERE pd.health_id = :abhaAddress AND
                  pr.reference_number IN (:patientReferenceSet) AND
                  cc.reference_number IN (:careContextSet) AND
-                 mr.type IN (:recordType)
+                 mr.type IN (:recordType) AND
+                 pd.facility_id = :qwikpeFacilityId
                  GROUP BY pd.health_id, pd.facility_id
                 """;
 
@@ -56,6 +57,7 @@ public class CustomQueries {
                 .setParameter("patientReferenceSet", patientReferenceSet)
                 .setParameter("careContextSet", careContextSet)
                 .setParameter("recordType", recordType)
+                .setParameter("qwikpeFacilityId", qwikpeFacilityId)
                 .getResultList();
 
         if (!results.isEmpty()) {
